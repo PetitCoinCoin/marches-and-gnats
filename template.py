@@ -4,6 +4,7 @@ from utils.main import arg_parser, set_clipboard_data
 
 class Machine(BaseMachine):
     def _build_steps_opt(self):
+        """X movements, X rules, X states"""
         raise
 
 

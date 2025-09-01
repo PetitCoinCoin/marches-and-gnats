@@ -1,20 +1,33 @@
-ALPHABET = "abcdefghijklmnopqrstuvwxyzäöõü-"
+from utils.machine import BaseMachine
+from utils.main import arg_parser, set_clipboard_data
 
-def build_rules() -> set:
-    rules = set()
-    rules.add("INIT _ HALT | R")
-    rules.add("INIT + COUNT | R")
-    for char in ALPHABET:
-        rules.add(f"INIT {char} INIT _ R")
-        rules.add(f"COUNT {char} BACK | L")
-    rules.add("BACK | BACK | L")
-    rules.add("BACK _ CLEAR _ R")
-    rules.add("CLEAR | COUNT _ R")
-    rules.add("COUNT | COUNT | R")
-    rules.add("COUNT + COUNT | R")
-    rules.add("COUNT _ HALT | R")
-    return rules
+
+class Machine(BaseMachine):
+    ALPHABET = "abcdefghijklmnopqrstuvwxyzäöõü-"
+
+    def _build_steps_opt(self):
+        """803 939 movements, 70 rules, 5 states"""
+        self.add("INIT _ HALT | R")
+        self.add("INIT + COUNT | R")
+        for char in self.ALPHABET:
+            self.add(f"INIT {char} INIT _ R")
+            self.add(f"COUNT {char} BACK | L")
+        self.add("BACK | BACK | L")
+        self.add("BACK _ CLEAR _ R")
+        self.add("CLEAR | COUNT _ R")
+        self.add("COUNT | COUNT | R")
+        self.add("COUNT + COUNT | R")
+        self.add("COUNT _ HALT | R")
 
 
 if __name__ == "__main__":
-    print("\n".join(build_rules()))
+    args = arg_parser()
+    machine = Machine()
+    machine.build_rules(rules_optimized=args.rules)
+    if args.stats:
+        print(machine.stats)
+    if args.test:
+        pass
+    else:
+        set_clipboard_data(machine.pretty_rules)
+        print("Rules copied to clipboard!")

@@ -50,7 +50,8 @@ class BaseMachine:
             self._build_steps_opt()
     
     def _build_rules_opt(self):
-        self.build_steps_opt()
+        print("No rules optimized for rules count")
+        self._build_steps_opt()
 
     @staticmethod
     def _build_steps_opt():
