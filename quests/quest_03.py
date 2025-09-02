@@ -20,7 +20,7 @@ if __name__ == "__main__":
     if args.stats:
         print(machine.stats)
     if args.test:
-        pass
+        machine.play(args.test)
     else:
         set_clipboard_data(machine.pretty_rules)
         print("self copied to clipboard!")

@@ -30,7 +30,7 @@ class BaseMachine:
     def __init__(self) -> None:
         self.rules: set[Rule] = set()
         self.state: str = self.INIT
-        self.head: str = self.BLANK
+        self.head: int = 0
         self.input: str = self.EMPTY
         self.tape: str = self.EMPTY
         self.steps: int = 0
@@ -57,8 +57,10 @@ class BaseMachine:
     def _build_steps_opt():
         raise NotImplementedError
 
-    def play(self, input: str) -> None:
-        pass
+    def play(self, tape: str) -> None:
+        self.tape = tape
+        self.input = tape
+        print(self.tape)
 
     @property
     def pretty_rules(self) -> str:
