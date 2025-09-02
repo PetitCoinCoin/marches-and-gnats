@@ -1,5 +1,5 @@
 from utils.machine import BaseMachine
-from utils.main import arg_parser, set_clipboard_data
+from utils.main import Colors, arg_parser, set_clipboard_data
 
 
 class Machine(BaseMachine):
@@ -15,7 +15,7 @@ if __name__ == "__main__":
     if args.stats:
         print(machine.stats)
     if args.test:
-        machine.play(args.test)
+        machine.play(args.test, verbose=args.verbose)
     else:
         set_clipboard_data(machine.pretty_rules)
-        print("Rules copied to clipboard!")
+        print(f"{Colors.GREEN}Rules copied to clipboard!")

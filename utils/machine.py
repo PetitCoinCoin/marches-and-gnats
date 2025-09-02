@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Iterable, Literal
 
+from utils.main import Colors
+
 @dataclass
 class Rule:
     state: str
@@ -49,27 +51,43 @@ class BaseMachine:
         else:
             self._build_steps_opt()
     
-    def play(self, tape: str) -> None:
+    def play(self, tape: str, *, verbose: bool = False) -> None:
         self.tape = [char for char in tape]
         self.input = tape
         self.state = self.INIT
         self.head = 0
         rules_dict = self.__rules_to_dict()
 
+        if verbose:
+            print(self.pretty_tape)
+
         while self.state != self.HALT:
             symbol = self.tape[self.head]
-            new_state, new_symbol, direction = rules_dict[self.state][symbol]
+            try:
+                new_state, new_symbol, direction = rules_dict[self.state][symbol]
+            except KeyError:
+                print(f"{Colors.RED}Missing transition: symbol {symbol} in state {self.state}{Colors.END}")
+                return
             self.tape[self.head] = new_symbol
             self.state = new_state
             self.head += 1 if direction == "R" else -1
             while self.head < 0:
                 self.head += 1
                 self.tape = [self.BLANK] + self.tape
-        print("".join(self.tape).replace(self.BLANK, ""))
+            if verbose:
+                print(self.pretty_tape)
+        print("".join(self.tape).replace(self.BLANK, self.EMPTY))
 
     @property
     def pretty_rules(self) -> str:
         return "\n".join(str(rule) for rule in self.rules)
+
+    @property
+    def pretty_tape(self) -> str:
+        result = f"{Colors.BLUE}{self.state.ljust(10)}{Colors.END} "
+        str_tape = "".join(self.tape)
+        result += f"{str_tape[:self.head]}{Colors.PURPLE}{str_tape[self.head]}{Colors.END}{str_tape[self.head + 1:]}"
+        return result
 
     @property
     def stats(self) -> dict:
@@ -79,7 +97,7 @@ class BaseMachine:
         }
 
     def _build_rules_opt(self):
-        print("No rules optimized for rules count")
+        print(f"{Colors.ORANGE}No rules optimized for rules count{Colors.END}")
         self._build_steps_opt()
 
     @staticmethod
