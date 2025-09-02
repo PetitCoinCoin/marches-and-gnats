@@ -6,7 +6,7 @@ class Rule:
     state: str
     symbol: str
     new_state: str
-    new_symbole: str
+    new_symbol: str
     direction: Literal["R", "L"]
 
     def __eq__(self, other):
@@ -16,7 +16,7 @@ class Rule:
         return hash((self.state, self.symbol))
     
     def __str__(self) -> str:
-        return f"{self.state} {self.symbol} {self.new_state} {self.new_symbole} {self.direction}"
+        return f"{self.state} {self.symbol} {self.new_state} {self.new_symbol} {self.direction}"
 
 
 class BaseMachine:
@@ -32,7 +32,7 @@ class BaseMachine:
         self.state: str = self.INIT
         self.head: int = 0
         self.input: str = self.EMPTY
-        self.tape: str = self.EMPTY
+        self.tape: list[str] = []
         self.steps: int = 0
 
     def add(self, rule: str | Rule) -> None:
@@ -50,9 +50,22 @@ class BaseMachine:
             self._build_steps_opt()
     
     def play(self, tape: str) -> None:
-        self.tape = tape
+        self.tape = [char for char in tape]
         self.input = tape
-        print(self.tape)
+        self.state = self.INIT
+        self.head = 0
+        rules_dict = self.__rules_to_dict()
+
+        while self.state != self.HALT:
+            symbol = self.tape[self.head]
+            new_state, new_symbol, direction = rules_dict[self.state][symbol]
+            self.tape[self.head] = new_symbol
+            self.state = new_state
+            self.head += 1 if direction == "R" else -1
+            while self.head < 0:
+                self.head += 1
+                self.tape = [self.BLANK] + self.tape
+        print("".join(self.tape).replace(self.BLANK, ""))
 
     @property
     def pretty_rules(self) -> str:
@@ -72,6 +85,14 @@ class BaseMachine:
     @staticmethod
     def _build_steps_opt():
         raise NotImplementedError
+
+    def __rules_to_dict(self) -> dict:
+        result = dict()
+        for rule in self.rules:
+            if rule.state not in result:
+                result[rule.state] = dict()
+            result[rule.state][rule.symbol] = (rule.new_state, rule.new_symbol, rule.direction)
+        return result
 
     def __states_count(self) -> int:
         states = set()
