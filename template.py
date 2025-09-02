@@ -5,7 +5,7 @@ from utils.main import Colors, arg_parser, set_clipboard_data
 class Machine(BaseMachine):
     def _build_steps_opt(self):
         """X movements, X rules, X states"""
-        raise
+        raise NotImplementedError
 
 
 if __name__ == "__main__":
