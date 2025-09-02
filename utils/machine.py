@@ -49,14 +49,6 @@ class BaseMachine:
         else:
             self._build_steps_opt()
     
-    def _build_rules_opt(self):
-        print("No rules optimized for rules count")
-        self._build_steps_opt()
-
-    @staticmethod
-    def _build_steps_opt():
-        raise NotImplementedError
-
     def play(self, tape: str) -> None:
         self.tape = tape
         self.input = tape
@@ -72,6 +64,14 @@ class BaseMachine:
             "Number of rules": len(self.rules),
             "Number of states": self.__states_count(),
         }
+
+    def _build_rules_opt(self):
+        print("No rules optimized for rules count")
+        self._build_steps_opt()
+
+    @staticmethod
+    def _build_steps_opt():
+        raise NotImplementedError
 
     def __states_count(self) -> int:
         states = set()
