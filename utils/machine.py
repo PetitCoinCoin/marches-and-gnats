@@ -74,6 +74,8 @@ class BaseMachine:
             while self.head < 0:
                 self.head += 1
                 self.tape = [self.BLANK] + self.tape
+            while self.head >= len(self.tape):
+                self.tape.append(self.BLANK)
             if verbose:
                 print(self.pretty_tape)
         print("".join(self.tape).replace(self.BLANK, self.EMPTY))
@@ -86,6 +88,7 @@ class BaseMachine:
     def pretty_tape(self) -> str:
         result = f"{Colors.BLUE}{self.state.ljust(10)}{Colors.END} "
         str_tape = "".join(self.tape)
+        # head = self.head if self.head < len(str_tape) else len(str_tape) - 1
         result += f"{str_tape[:self.head]}{Colors.PURPLE}{str_tape[self.head]}{Colors.END}{str_tape[self.head + 1:]}"
         return result
 
