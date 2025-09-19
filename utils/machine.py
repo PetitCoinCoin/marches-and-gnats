@@ -56,6 +56,7 @@ class BaseMachine:
         self.input = tape
         self.state = self.INIT
         self.head = 0
+        self.steps = 0
         rules_dict = self.__rules_to_dict()
 
         if verbose:
@@ -78,7 +79,8 @@ class BaseMachine:
                 self.tape.append(self.BLANK)
             if verbose:
                 print(self.pretty_tape)
-        print("".join(self.tape).replace(self.BLANK, self.EMPTY))
+            self.steps += 1
+        print("".join(self.tape).replace(self.BLANK, self.EMPTY), self.steps, "steps")
 
     @property
     def pretty_rules(self) -> str:
